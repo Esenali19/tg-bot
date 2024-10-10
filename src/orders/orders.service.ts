@@ -16,15 +16,7 @@ export class OrdersService {
   }
 
   async findAll() {
-    return this.prisma.order.findMany({
-      include: {
-        items: {
-          include: {
-            item: true,
-          },
-        },
-      },
-    });
+    return this.prisma.order.findMany();
   }
 
   async findOne(id: number) {
@@ -68,8 +60,8 @@ export class OrdersService {
   }
 
   async addItemToOrder(orderId: number, itemId: number) {
-    const order = await this.findOne(orderId);
-    const item = await this.itemsService.findOne(itemId);
+    await this.findOne(orderId);
+    await this.itemsService.findOne(itemId);
     return this.prisma.itemsOnOrders.create({
       data: {
         orderId: orderId,
@@ -79,8 +71,8 @@ export class OrdersService {
   }
 
   async removeItemFromOrder(orderId: number, itemId: number) {
-    const order = await this.findOne(orderId);
-    const item = await this.itemsService.findOne(itemId);
+    await this.findOne(orderId);
+    await this.itemsService.findOne(itemId);
     return this.prisma.itemsOnOrders.delete({
       where: {
         orderId_itemId: {

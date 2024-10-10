@@ -1,9 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  HttpCode,
+} from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiCreatedResponse } from '@nestjs/swagger';
 import { ItemsService } from './items.service';
 import { CreateItemDto } from './dto/create-item.dto';
 import { UpdateItemDto } from './dto/update-item.dto';
-
+import { ItemEntity } from './entities/item.entity';
 
 @ApiTags('Items')
 @Controller('items')
@@ -12,27 +21,40 @@ export class ItemsController {
 
   @Post()
   @ApiOperation({ summary: 'Create item' })
-  create(@Body() createItemDto: CreateItemDto) {
-    return this.itemsService.create(createItemDto);
+  @ApiCreatedResponse({ type: ItemEntity })
+  async create(@Body() createItemDto: CreateItemDto): Promise<ItemEntity> {
+    return new ItemEntity(await this.itemsService.create(createItemDto));
   }
 
   @Get()
-  findAll() {
-    return this.itemsService.findAll();
+  @ApiOperation({ summary: 'List item' })
+  @ApiCreatedResponse({ type: ItemEntity })
+  async findAll(): Promise<ItemEntity[]> {
+    const items = await this.itemsService.findAll();
+    return items.map((item) => new ItemEntity(item));
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.itemsService.findOne(+id);
+  @ApiOperation({ summary: 'Get item by id' })
+  @ApiCreatedResponse({ type: ItemEntity })
+  async findOne(@Param('id') id: string): Promise<ItemEntity> {
+    return new ItemEntity(await this.itemsService.findOne(+id));
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateItemDto: UpdateItemDto) {
-    return this.itemsService.update(+id, updateItemDto);
+  @ApiOperation({ summary: 'Update item by id' })
+  @ApiCreatedResponse({ type: ItemEntity })
+  async update(
+    @Param('id') id: string,
+    @Body() updateItemDto: UpdateItemDto,
+  ): Promise<ItemEntity> {
+    return new ItemEntity(await this.itemsService.update(+id, updateItemDto));
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.itemsService.remove(+id);
+  @ApiOperation({ summary: 'Delete item by id' })
+  @HttpCode(204)
+  async remove(@Param('id') id: string): Promise<void> {
+    await this.itemsService.remove(+id);
   }
 }
