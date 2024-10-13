@@ -1,31 +1,32 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreatePermissionDto } from 'src/users/dto/create-permission.dto';
 
 @Injectable()
 export class BotService {
-
   constructor(private prisma: PrismaService) {}
 
-  async addUser(telegramId: string) {
+  async addUser(telegramId: string, username: string | undefined) {
     const user = await this.prisma.user.upsert({
       where: { telegramId },
-      create: { telegramId },
+      update: { username },
+      create: { telegramId, username },
     });
     return user;
   }
 
-  async addPermission(userId: number, permissionName: string) {
-    const permission = await this.prisma.permission.upsert({
-      where: { name: permissionName },
-      update: {},
-      create: { name: permissionName },
+  async createPermission(createPermissionDto: CreatePermissionDto) {
+    return await this.prisma.premission.create({
+      data: createPermissionDto,
     });
+  }
 
-    await this.prisma.user.update({
+  async addPermissionToUser(userId: number, permissionId: number) {
+    return this.prisma.user.update({
       where: { id: userId },
       data: {
         permissions: {
-          connect: { id: permission.id },
+          connect: { id: permissionId },
         },
       },
     });

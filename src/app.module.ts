@@ -6,10 +6,11 @@ import { ItemsModule } from './items/items.module';
 import { OrdersModule } from './orders/orders.module';
 import { UsersModule } from './users/users.module';
 import { BotModule } from './bot/bot.module';
+import { TelegrafModule } from 'nestjs-telegraf';
 
 @Module({
   imports: [ItemsModule, PrismaModule, OrdersModule, UsersModule, BotModule, TelegrafModule.forRoot({
-    token: 'TELEGRAM_BOT_TOKEN',
+    token: '7389975739:AAGucmd_J3dwwveq9fIuoEIwZ9RAHxf4EKA',
   })],
   controllers: [AppController],
   providers: [AppService],
