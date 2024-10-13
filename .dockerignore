@@ -1,0 +1,34 @@
+# Node modules and build artifacts
+node_modules
+dist
+build
+# Logs
+npm-debug.log
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env*.local
+# Prisma
+prisma/.env
+prisma/migrations
+prisma/dev.db
+# Docker specific files
+Dockerfile
+docker-compose.yml
+# Other system files
+.DS_Store
+.idea
+.vscode
+*.swp
+*~
+# Temp files
+tmp
+*.log
+coverage
+

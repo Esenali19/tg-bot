@@ -7,6 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+model User {
+  id        Int      @id @default(autoincrement())
+  telegramId String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  permissions Permission[]
+}
+
+model Permission {
+  id     Int    @id @default(autoincrement())
+  name   String @unique
+  users  User[]
+}
+
 model Order {
   id        Int             @id @default(autoincrement())
   createdAt DateTime        @default(now())

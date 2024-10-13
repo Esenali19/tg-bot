@@ -4,9 +4,13 @@ import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ItemsModule } from './items/items.module';
 import { OrdersModule } from './orders/orders.module';
+import { UsersModule } from './users/users.module';
+import { BotModule } from './bot/bot.module';
 
 @Module({
-  imports: [ItemsModule, PrismaModule, OrdersModule],
+  imports: [ItemsModule, PrismaModule, OrdersModule, UsersModule, BotModule, TelegrafModule.forRoot({
+    token: 'TELEGRAM_BOT_TOKEN',
+  })],
   controllers: [AppController],
   providers: [AppService],
 })
